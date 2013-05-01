@@ -24,7 +24,7 @@ def validate():
     with cd(PROJECT_ROOT):
         local('pep8 --exclude=migrations --ignore=E501,E225 dev_db')
         local('pyflakes.py -x W dev_db')
-        local('python /dev_db_example/manage.py test dev_db')
+        local('python dev_db_example/manage.py test dev_db')
 
 
 def clean():
