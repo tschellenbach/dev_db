@@ -1,5 +1,6 @@
 
 from functools import wraps
+from django.utils.decorators import available_attrs
 
 
 def simplify_class_decorator(class_decorator):
@@ -44,20 +45,20 @@ def simplify_class_decorator(class_decorator):
 class CachedDecorator(object):
     """
     Decorator which cached the call to the give function. Usage example ::
-    
+
     @cached(key='notification_settings_%(user_id)s', timeout=60 * 10)
-    
+
     For people which got tired of typing ::
-    
+
     key_format = 'my_format_%(user_id)s'
     key = key_format % dict(user_id=user_id)
     data = cache.get(key)
-    
+
     if data is None:
         data = range(10, 20)
         #or any other stuff here
         cache.set(key, data, timeout=50)
-        
+
     return data
     """
     def __init__(self, fn, key, timeout):
@@ -69,7 +70,7 @@ class CachedDecorator(object):
         self.fn = fn
         self.key = key
         self.timeout = timeout
-        
+
     def __call__(self):
         '''
         When the decorator is called like this
@@ -94,18 +95,18 @@ class CachedDecorator(object):
         from django.core.cache import cache
         # simplify to only using kwargs for easy key string formatting
         args, kwargs = self.args_to_kwargs(fn, args, kwargs)
-        
+
         key = self.key % kwargs
         timeout = self.timeout
-        
+
         data = cache.get(key)
-        
+
         if data is None:
             data = fn(**kwargs)
             cache.set(key, data, timeout)
-        
+
         return data
-    
+
     def args_to_kwargs(self, fn, args, kwargs):
         '''
         Turn arg bassed calls to kwargs

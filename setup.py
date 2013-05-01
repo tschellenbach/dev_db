@@ -13,6 +13,7 @@ tests_require = [
     'pep8',
     'coverage',
     'unittest2',
+    'pytest',
 ]
 
 install_requires = [
@@ -46,7 +47,7 @@ setup(
     install_requires=install_requires,
     tests_require=tests_require,
     extras_require={'test': tests_require},
-    test_suite='dev_db.tests',
+    test_suite='runtests.runtests',
     include_package_data=True,
     classifiers=CLASSIFIERS,
 )

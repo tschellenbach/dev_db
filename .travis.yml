@@ -18,6 +18,7 @@ before_script:
   - "pep8 --exclude=migrations --ignore=E501,E225 dev_db"
   - pyflakes -x W dev_db
 script:
-  - TRAVIS=yes pip install -e .
-  - coverage run setup.py test
+  - pip install -e .
+  - cd dev_db_example
+  - coverage run manage.py test dev_db
   - coverage report

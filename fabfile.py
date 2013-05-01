@@ -12,7 +12,7 @@ def publish(test='yes'):
 
     local('git push')
 
-    from snaptastic import __version__
+    from dev_db import __version__
     tag_name = 'v%s' % __version__
     local('python setup.py sdist upload')
 
@@ -22,12 +22,12 @@ def publish(test='yes'):
 
 def validate():
     with cd(PROJECT_ROOT):
-        local('pep8 --exclude=migrations --ignore=E501,E225 snaptastic')
-        local('pyflakes.py -x W snaptastic')
-        local('python -m unittest snaptastic.tests')
+        local('pep8 --exclude=migrations --ignore=E501,E225 dev_db')
+        local('pyflakes.py -x W dev_db')
+        local('python /dev_db_example/manage.py test dev_db')
 
 
 def clean():
     local('bash -c "autopep8 -i *.py"')
-    local('bash -c "autopep8 -i snaptastic/*.py"')
-    local('bash -c "autopep8 -i snaptastic/utils/*.py"')
+    local('bash -c "autopep8 -i dev_db/*.py"')
+    local('bash -c "autopep8 -i dev_db/management/commands/*.py"')

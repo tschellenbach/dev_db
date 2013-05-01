@@ -24,15 +24,16 @@ class Command(BaseCommand):
     help = 'Output a sample of the database as a fixture of the given format.'
     option_list = BaseCommand.option_list + (
         make_option('--format', default='json', dest='format',
-            help='Specifies the output serialization format for fixtures.'),
+                    help='Specifies the output serialization format for fixtures.'),
         make_option('--indent', default=4, dest='indent', type='int',
-            help='Specifies the indent level to use when pretty-printing output'),
+                    help='Specifies the indent level to use when pretty-printing output'),
         make_option('--limit', default=None, dest='limit', type='int',
-            help='Allows you to limit the number of tables, used for testing purposes only'),
-        make_option('--skipcache', default=False, dest='skipcache', action='store_true',
+                    help='Allows you to limit the number of tables, used for testing purposes only'),
+        make_option(
+            '--skipcache', default=False, dest='skipcache', action='store_true',
             help='Skips the settings cache'),
     )
-    
+
     def handle(self, **options):
         # setup the options
         self.format = options.get('format', 'json')
@@ -40,16 +41,18 @@ class Command(BaseCommand):
         self.indent = options.get('indent', 4)
         self.limit = options.get('limit')
         self.skipcache = options.get('skipcache')
-        logger.info('serializing using %s and indent %s', self.format, self.indent)
-        
+        logger.info(
+            'serializing using %s and indent %s', self.format, self.indent)
+
         t = timer()
         creator = get_creator_instance()
+        logger.info('using creator instance %s', creator)
         if self.skipcache:
             logger.info('skipping the cache')
             model_settings = creator.get_model_settings()
         else:
             model_settings = creator.get_cached_model_settings()
-            
+
         logger.info('model_settings lookup took %s', t.next())
         data = creator.collect_data(model_settings, limit=self.limit)
         logger.info('data collection took %s', t.next())
@@ -70,4 +73,3 @@ class Command(BaseCommand):
             serializers.get_serializer(format)
         except KeyError:
             raise CommandError("Unknown serialization format: %s" % format)
-

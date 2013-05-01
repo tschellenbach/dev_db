@@ -6,20 +6,20 @@ from django.db.models.fields.related import ForeignKey, ManyToManyField
 def get_dependencies(instance, dependencies=None):
     '''
     Recurses through the results and finds the dependencies
-    
+
     Example:
     Love -> deps == (User, User, Entity, Love)
-    
+
     Recurse
     (User, Profile, User, Profile, Site, Entity, Love)
-    
+
     Recurse
     (User, Profile, User, Profile, Site Category, Site, Entity, Love)
     '''
     # set the defaults
-    if dependencies == None:
+    if dependencies is None:
         dependencies = []
-    
+
     # see the dependencies for this instance
     deps = get_first_dependencies(instance)
     # prevent infinite loops, usually between profile and user
@@ -32,7 +32,7 @@ def get_dependencies(instance, dependencies=None):
         # this happens for (Entity, User
         else:
             get_dependencies(d, dependencies)
-        
+
     return dependencies
 
 
@@ -40,15 +40,15 @@ def get_first_dependencies(instance):
     '''
     Returns all dependencies for this instance and the instance itself
     in the right order
-    
+
     Note: Only goes one level deep
     '''
     # exception for profiles
     from django.contrib.auth.models import User
-    
+
     # get all fields for this instance
     all_fields = get_all_fields(instance)
-        
+
     dependencies = [instance]
     # iterate over all fields
     for f in all_fields:
@@ -58,7 +58,7 @@ def get_first_dependencies(instance):
             new = getattr(instance, f.name)
             if new:
                 dependencies.insert(0, new)
-                
+
         # handle many to many fields, we need to support this as django will attempt
         # to serialize them when serializing related items
         if isinstance(f, ManyToManyField):
@@ -70,5 +70,5 @@ def get_first_dependencies(instance):
     if isinstance(instance, User):
         profile = instance.get_profile()
         dependencies.append(profile)
-        
+
     return dependencies

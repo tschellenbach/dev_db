@@ -5,6 +5,25 @@ Tool to automatically create a development database for local development by sam
 It maintains referential integrity by looking up the dependencies for the selected rows.
 
 
+Installation
+============
+
+
+```bash
+  sudo pip install dev_db
+```
+
+Add dev_db to your installed apps
+
+Customize the CreateDevDB class
+
+```python
+DEV_DB_CREATOR = 'dev_db.creator.DevDBCreator'
+# for fashiolista
+DEV_DB_CREATOR = 'framework.dev_db_creator.FashiolistaDBCreator'
+```
+
+
 Creating the data
 =================
 
