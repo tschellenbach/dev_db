@@ -19,6 +19,7 @@ before_script:
   - pyflakes -x W dev_db
 script:
   - pip install -e .
+  - pip install django
   - cd dev_db_example
   - coverage run manage.py test dev_db
   - coverage report
