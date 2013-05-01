@@ -1,0 +1,23 @@
+language: python
+notifications:
+  email:
+    - thierryschellenbach@gmail.com
+    - tbarbugli@gmail.com
+python:
+  - 2.6
+  - 2.7
+env:
+  - REQUIREMENTS=development SETTINGS=facebook_example.settings TESTS=django_facebook DJANGO=1.3.1
+install:
+  - pip install pep8 --use-mirrors
+  - pip install coverage --use-mirrors
+  - pip install unittest2 --use-mirrors
+  - pip install https://github.com/dcramer/pyflakes/tarball/master
+  - python setup.py install
+before_script:
+  - "pep8 --exclude=migrations --ignore=E501,E225 dev_db"
+  - pyflakes -x W dev_db
+script:
+  - TRAVIS=yes pip install -e .
+  - coverage run setup.py test
+  - coverage report
