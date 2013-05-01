@@ -16,9 +16,7 @@ tests_require = [
     'pytest',
 ]
 
-install_requires = [
-    'django',
-]
+install_requires = []
 
 license_text = open('LICENSE.txt').read()
 long_description = open('README.md').read()
