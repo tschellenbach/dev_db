@@ -14,6 +14,7 @@ tests_require = [
     'coverage',
     'unittest2',
     'pytest',
+    'django',
 ]
 
 install_requires = []
