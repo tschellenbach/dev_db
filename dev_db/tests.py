@@ -7,6 +7,7 @@ from django.test.testcases import TestCase
 
 class CreatorTestCase(TestCase):
     fixtures = ['example.json']
+
     def setUp(self):
         from core.dev_db_creator import ExampleDevDBCreator
         self.creator = ExampleDevDBCreator()
@@ -32,7 +33,7 @@ class CreatorTestCase(TestCase):
             (Group, 30),
             (User, 30),
             (ContentType, 30),
-         ]
+        ]
         self.assertEqual(model_settings, expected_result)
 
     def test_collect(self):
@@ -64,7 +65,8 @@ class CreatorTestCase(TestCase):
         instance = Item.objects.all()[:1][0]
         # check the recursive approach
         dependencies = get_dependencies(instance)
-        correct_deps = list(instance.tags.all())[::-1] + [instance.user, instance.site.category, instance.site, instance]
+        correct_deps = list(instance.tags.all())[::-1] + [instance.user,
+                                                          instance.site.category, instance.site, instance]
         self.assertEqual(dependencies, correct_deps)
 
     def test_filter_step(self):
@@ -80,7 +82,7 @@ class CreatorTestCase(TestCase):
         correct_result = [instance.user, instance]
         result = self.creator.filter_data(list_with_duplicates)
         self.assertEqual(result, correct_result)
-        
+
     def test_full_create(self):
         '''
         For now just make sure it doesnt produce errors
@@ -90,4 +92,5 @@ class CreatorTestCase(TestCase):
         data = self.creator.collect_data(model_settings)
         extended_data = self.creator.extend_data(data)
         filtered_data = self.creator.filter_data(extended_data)
-        serialized = serializers.serialize('json', filtered_data, indent=4, use_natural_keys=True)
+        serialized = serializers.serialize(
+            'json', filtered_data, indent=4, use_natural_keys=True)
