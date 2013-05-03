@@ -128,3 +128,14 @@ class timer(object):
             return default
 
     avg = property(get_avg)
+    
+    
+def get_profile_class():
+    from django.conf import settings
+    from django.db import models
+    profile_string = settings.AUTH_PROFILE_MODULE
+    app_label, model = profile_string.split('.')
+
+    return models.get_model(app_label, model)
+
+

@@ -67,7 +67,7 @@ class DevDBCreator(object):
                 limit = 30
             if m in full_required:
                 limit = 2000
-            setting = (m, limit, max_id)
+            setting = (m, limit)
             model_settings.append(setting)
         return model_settings
 
@@ -79,7 +79,7 @@ class DevDBCreator(object):
         logger.info('loading the custom data first')
         objects = self.get_custom_data()
 
-        for (m, limit, max_id) in model_settings[:limit]:
+        for (m, limit) in model_settings[:limit]:
             logger.info('getting %s items for model %s', limit, m)
             id_primary_key = model_has_id_primary_key(m)
             if id_primary_key:
@@ -132,7 +132,9 @@ class DevDBCreator(object):
             'sentry',
             'south',
             # skip user profile as it gets loaded when users are loaded
-            'user_profile'
+            'user_profile',
+            # log entries arent very interesting either
+            'log',
         ]
         if EXCLUDE_CONTENT_TYPE_ETC:
             # special cases in django which get generated automatically

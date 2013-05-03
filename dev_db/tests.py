@@ -6,78 +6,66 @@ from django.test.testcases import TestCase
 
 
 class CreatorTestCase(TestCase):
+    fixtures = ['example.json']
     def setUp(self):
-        self.creator = DevDBCreator()
+        from core.dev_db_creator import ExampleDevDBCreator
+        self.creator = ExampleDevDBCreator()
 
     def test_model_listing(self):
-        return
-        self.creator.get_models()
+        listed_models = self.creator.get_models()
 
     def test_model_settings(self):
-        return
-        self.creator.get_model_settings()
+        model_settings = self.creator.get_model_settings()
+        from django.contrib.sessions.models import Session
+        from django.contrib.auth.models import User, Permission, Group
+        from django.contrib.sites.models import Site as DjangoSite
+        from django.contrib.contenttypes.models import ContentType
+        from core.models import SiteCategory, Site, Tag, Item
+        expected_result = [
+            (SiteCategory, 30),
+            (Site, 30),
+            (Tag, 30),
+            (Item, 30),
+            (Session, 30),
+            (DjangoSite, 30),
+            (Permission, 30),
+            (Group, 30),
+            (User, 30),
+            (ContentType, 30),
+         ]
+        self.assertEqual(model_settings, expected_result)
 
     def test_collect(self):
-        return
         model_settings = self.creator.get_model_settings()
         data = self.creator.collect_data(model_settings)
 
-    def test_dependency_lookup_user(self):
+    def test_dependency_lookup_site(self):
         '''
         Expected output is a sorted list like
 
         Site Category, Site, User, Entity, Love
 
         '''
-        return
-        from django.contrib.auth.models import User
-        from user.models import Profile
-        instance = User.objects.all()[:1][0]
+        from core.models import Site, SiteCategory
+        site = Site.objects.all()[:1][0]
+        # check the recursive approach
+        dependencies = get_dependencies(site)
+        correct_deps = [site.category, site]
+        self.assertEqual(dependencies, correct_deps)
 
-        # check the one level deep case
-        dependencies = get_first_dependencies(instance)
-        if not isinstance(dependencies[1], Profile) or len(dependencies) != 2:
-            raise ValueError
+    def test_dependency_lookup_item(self):
+        '''
+        Expected output is a sorted list like
+
+        Site Category, Site, User, Entity, Love
+
+        '''
+        from core.models import Item
+        instance = Item.objects.all()[:1][0]
         # check the recursive approach
         dependencies = get_dependencies(instance)
-        if not isinstance(dependencies[1], Profile) or len(dependencies) != 2:
-            raise ValueError
-
-    def test_dependency_lookup_love(self):
-        '''
-        Expected output is a sorted list like
-
-        Site Category, Site, User, Entity, Love
-        '''
-        return
-        from entity.models import Love
-        from user.models import Profile
-        from django.contrib.auth.models import User
-        from entity.models import Entity, Site, SiteCategory
-        instance = Love.objects.all()[:1][0]
-        first_dependencies = get_first_dependencies(instance)
-        first_models = [d.__class__ for d in first_dependencies]
-        required_models = [User, User, Entity, Love]
-        self.assertEqual(first_models, required_models)
-        dependencies = get_dependencies(instance)
-        models = [d.__class__ for d in dependencies]
-        required_models = [User, Profile] * 3 + [SiteCategory,
-                                                 Site, Entity, Love]
-        self.assertEqual(models, required_models)
-
-    def test_dependency_lookup_comment(self):
-        return
-        from entity.models import Love
-        from user.models import Profile
-        from django.contrib.auth.models import User
-        from entity.models import Entity, Site, SiteCategory
-        from tcc.models import Comment
-        instance = Comment.objects.all()[:1][0]
-        dependencies = get_dependencies(instance)
-        models = [d.__class__ for d in dependencies]
-        required_models = [User, Profile, SiteCategory, Site,
-                           Entity, User, Profile, ContentType, Comment]
-        self.assertEqual(models, required_models)
+        correct_deps = list(instance.tags.all())[::-1] + [instance.user, instance.site.category, instance.site, instance]
+        self.assertEqual(dependencies, correct_deps)
 
     def test_filter_step(self):
         '''
@@ -86,4 +74,20 @@ class CreatorTestCase(TestCase):
 
         and removes duplicates (keeping only the first occurrence)
         '''
-        return
+        from core.models import Item
+        instance = Item.objects.all()[:1][0]
+        list_with_duplicates = [instance.user, instance, instance.user]
+        correct_result = [instance.user, instance]
+        result = self.creator.filter_data(list_with_duplicates)
+        self.assertEqual(result, correct_result)
+        
+    def test_full_create(self):
+        '''
+        For now just make sure it doesnt produce errors
+        '''
+        from django.core import serializers
+        model_settings = self.creator.get_model_settings()
+        data = self.creator.collect_data(model_settings)
+        extended_data = self.creator.extend_data(data)
+        filtered_data = self.creator.filter_data(extended_data)
+        serialized = serializers.serialize('json', filtered_data, indent=4, use_natural_keys=True)
