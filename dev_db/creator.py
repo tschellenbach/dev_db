@@ -71,7 +71,7 @@ class DevDBCreator(object):
             model_settings.append(setting)
         return model_settings
 
-    def collect_data(self, model_settings, limit=None):
+    def collect_data(self, model_settings, limit=None, select_related=False):
         '''
         You can easily add more data by implementing get_custom_data
         '''
@@ -86,7 +86,9 @@ class DevDBCreator(object):
                 queryset = m._default_manager.all().order_by('-id')
             else:
                 queryset = m._default_manager.all()
-            queryset = queryset.select_related()[:limit]
+            if select_related:
+                queryset = queryset.select_related()
+            queryset = queryset[:limit]
             objects.extend(queryset)
 
         # filter out duplicates
