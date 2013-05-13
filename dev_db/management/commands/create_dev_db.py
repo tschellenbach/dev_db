@@ -54,7 +54,8 @@ class Command(BaseCommand):
             model_settings = creator.get_cached_model_settings()
 
         logger.info('model_settings lookup took %s', t.next())
-        data = creator.collect_data(model_settings, limit=self.limit, select_related=False)
+        data = creator.collect_data(
+            model_settings, limit=self.limit, select_related=False)
         logger.info('data collection took %s', t.next())
         extended_data = creator.extend_data(data)
         logger.info('extending data took %s', t.next())
