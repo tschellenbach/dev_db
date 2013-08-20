@@ -35,7 +35,7 @@ class DevDBCreator(object):
         excluded = self.get_excluded_models()
         all_models = self.get_all_models()
         valid_models = list(full_required)
-        
+
         for m, n in all_models:
             # skip the ones already in full required
             if m in valid_models:
