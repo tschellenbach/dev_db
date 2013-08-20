@@ -6,6 +6,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.loading import get_models
 import logging
+from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,7 @@ class DevDBCreator(object):
         excluded = self.get_excluded_models()
         all_models = self.get_all_models()
         valid_models = list(full_required)
+        
         for m, n in all_models:
             # skip the ones already in full required
             if m in valid_models:
@@ -148,8 +150,8 @@ class DevDBCreator(object):
 
     def get_custom_data(self):
         logger.info('loading staff users')
-        from django.contrib.auth.models import User
-        data = list(User.objects.filter(is_staff=True))
+        user_model = get_user_model()
+        data = list(user_model.objects.filter(is_staff=True))
 
         return data
 
