@@ -28,7 +28,7 @@ Creating the data
 =================
 
 ```bash
-  python manage.py create_dev_db > ../development_data.json
+  python manage.py create_dev_db -o > ../development_data.json
   gzip ../development_data.json
 ```
 
