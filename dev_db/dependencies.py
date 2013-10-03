@@ -45,7 +45,8 @@ def get_first_dependencies(instance):
     Note: Only goes one level deep
     '''
     # exception for profiles
-    from django.contrib.auth.models import User
+    from django.contrib.auth import get_user_model
+    UserModel = get_user_model()
 
     # get all fields for this instance
     all_fields = get_all_fields(instance)
@@ -68,7 +69,7 @@ def get_first_dependencies(instance):
                     dependencies.insert(0, new)
 
     #hack for profile models
-    if isinstance(instance, User):
+    if isinstance(instance, UserModel):
         try:
             profile = instance.get_profile()
         except SiteProfileNotAvailable, e:
