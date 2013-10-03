@@ -48,7 +48,6 @@ class Command(BaseCommand):
         if output:
             self.output_path = os.path.abspath(output)
             self.output = open(self.output_path, 'w')
-        print self.output
         self.skipcache = options.get('skipcache')
         logger.info(
             'serializing using %s and indent %s', self.format, self.indent)
