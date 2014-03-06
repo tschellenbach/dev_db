@@ -10,8 +10,6 @@ from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
 
-EXCLUDE_CONTENT_TYPE_ETC = False
-
 
 class DevDBCreator(object):
     '''
@@ -24,6 +22,7 @@ class DevDBCreator(object):
     - extend_data (looks up the dependencies for the data)
     The extended data is ready for serialization
     '''
+    exclude_content_type = False
     def get_models(self):
         '''
         Get models creates a list of models to create the dev db from
@@ -116,7 +115,7 @@ class DevDBCreator(object):
         Filter the dependencies because contenttype and permission are automagically created by django
         '''
         deps = get_dependencies(instance)
-        if EXCLUDE_CONTENT_TYPE_ETC:
+        if self.exclude_content_type:
             deps = [d for d in deps if not isinstance(
                 d, (ContentType, Permission))]
         return deps
@@ -140,7 +139,7 @@ class DevDBCreator(object):
             # log entries arent very interesting either
             'log',
         ]
-        if EXCLUDE_CONTENT_TYPE_ETC:
+        if self.exclude_content_type:
             # special cases in django which get generated automatically
             excluded += ['content_type', 'permission']
         return excluded
