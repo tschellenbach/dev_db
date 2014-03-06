@@ -30,8 +30,9 @@ class Command(BaseCommand):
                     help='Specifies the indent level to use when pretty-printing output'),
         make_option('--limit', default=None, dest='limit', type='int',
                     help='Allows you to limit the number of tables, used for testing purposes only'),
-        make_option('-o', '--output', default=None, dest='output', type='string',
-                    help='Path of the output file'),
+        make_option(
+            '-o', '--output', default=None, dest='output', type='string',
+            help='Path of the output file'),
         make_option(
             '--skipcache', default=False, dest='skipcache', action='store_true',
             help='Skips the settings cache'),

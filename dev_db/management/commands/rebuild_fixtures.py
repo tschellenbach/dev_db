@@ -15,56 +15,61 @@ def register(fixture_generator):
 class FixtureGenerator(object):
     '''
     Usually you'll want to replace
-    
+
     - name
     - fixture_path (a list of, passed to os.path.join)
     - get_objects (returning the objects)
-    
+
     Subsequently you should register your fixture generator
-    
-    
+
+
     **Examples**::
-    
+
         class CommentFixture(FixtureGenerator):
             name = 'comment'
             fixture_path = ['py', 'user', 'fixtures', 'comments.json']
-            
+
             def get_objects(self):
                 content_types = []
-                content_types.append(ContentType.objects.get(app_label="lists", model="userlist"))
-                content_types.append(ContentType.objects.get(app_label="user", model="profile"))
-                content_types.append(ContentType.objects.get(app_label="entity", model="entity"))
-                
+                content_types.append(ContentType.objects.get(
+                    app_label="lists", model="userlist"))
+                content_types.append(ContentType.objects.get(
+                    app_label="user", model="profile"))
+                content_types.append(ContentType.objects.get(
+                    app_label="entity", model="entity"))
+
                 comments = []
                 for c in content_types:
                     from tcc.models import Comment
-                    new_comments = list(Comment.objects.filter(content_type=c, object_pk__isnull=False)[:10])
-                    new_comments = [c for c in new_comments if c.content_object][:1]
+                    new_comments = list(Comment.objects.filter(
+                        content_type=c, object_pk__isnull=False)[:10])
+                    new_comments = [
+                        c for c in new_comments if c.content_object][:1]
                     comments += new_comments
-                    
+
                 return comments
-            
+
         register(CommentFixture)
-        
-        
+
+
         class CommunicationFixture(FixtureGenerator):
             name = 'communication'
             fixture_path = ['py', 'user', 'fixtures', 'communication.json']
-            
+
             def get_objects(self):
                 from user.models import Communication
                 objects = list(Communication.objects.all()[:100])
                 return objects
-            
+
         register(CommunicationFixture)
-    
+
     '''
     name = None
     fixture_path = None
-    
+
     def get_objects(self):
         pass
-    
+
     def regenerate(self):
         path = self.get_path()
         objects = self.get_objects_with_deps()
@@ -72,11 +77,11 @@ class FixtureGenerator(object):
         out = open(path, "w")
         out.write(data)
         out.close()
-    
+
     def get_path(self):
         path = os.path.join(settings.BASE_ROOT, *self.fixture_path)
         return path
-    
+
     def cleanup(self, objects):
         # these are models we never want in a fixture
         to_remove = (ContentType, Permission, Group)
@@ -85,7 +90,7 @@ class FixtureGenerator(object):
             if not isinstance(object_, to_remove):
                 cleaned_objects.append(object_)
         return cleaned_objects
-    
+
     def get_objects_with_deps(self):
         from dev_db.dependencies import get_dependencies
         objects = self.get_objects()
@@ -95,7 +100,7 @@ class FixtureGenerator(object):
         objects += deps
         objects = self.cleanup(objects)
         return objects
-            
+
 
 class Command(BaseCommand):
     help = 'Get a list of the current settings'
@@ -108,4 +113,3 @@ class Command(BaseCommand):
             instance = generator()
             instance.regenerate()
             print 'replaced fixture %s' % instance.get_path()
-
