@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import serializers
 from django.core.management.base import BaseCommand
 import os
+from django.core.management import call_command
 
 fixtures = {}
 
@@ -108,6 +109,9 @@ class Command(BaseCommand):
     requires_model_validation = False
 
     def handle(self, *args, **options):
+        print 'starting'
+        call_command('validate')
+        print 'found fixtures', fixtures
         for name, generator in fixtures.items():
             print name, generator
             instance = generator()
