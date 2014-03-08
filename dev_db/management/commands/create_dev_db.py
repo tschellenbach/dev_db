@@ -71,7 +71,8 @@ class Command(BaseCommand):
         filtered_data = creator.filter_data(extended_data)
         logger.info('filtering data took %s', t.next())
         logger.info('serializing data with format %s', self.format)
-        serialized = serializers.serialize(self.format, filtered_data, indent=self.indent, use_natural_keys=False)
+        serialized = serializers.serialize(
+            self.format, filtered_data, indent=self.indent, use_natural_keys=False)
         # write the output
         if self.output:
             self.output.write(serialized)

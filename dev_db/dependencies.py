@@ -68,7 +68,7 @@ def get_first_dependencies(instance):
                 if new:
                     dependencies.insert(0, new)
 
-    #hack for profile models
+    # hack for profile models
     if isinstance(instance, UserModel):
         try:
             profile = instance.get_profile()

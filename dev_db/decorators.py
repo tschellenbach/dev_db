@@ -43,6 +43,7 @@ def simplify_class_decorator(class_decorator):
 
 
 class CachedDecorator(object):
+
     """
     Decorator which cached the call to the give function. Usage example ::
 

@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class DevDBCreator(object):
+
     '''
     The dev creator class handles all the logic for creating a dev db sample from your main database
 
@@ -23,6 +24,7 @@ class DevDBCreator(object):
     The extended data is ready for serialization
     '''
     exclude_content_type = False
+
     def get_models(self):
         '''
         Get models creates a list of models to create the dev db from

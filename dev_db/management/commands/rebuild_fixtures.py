@@ -14,6 +14,7 @@ def register(fixture_generator):
 
 
 class FixtureGenerator(object):
+
     '''
     Usually you'll want to replace
 

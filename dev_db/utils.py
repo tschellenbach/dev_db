@@ -105,6 +105,7 @@ def get_class_from_string(path, default='raise'):
 
 
 class timer(object):
+
     def __init__(self):
         self.times = [time.time()]
         self.total = 0.
