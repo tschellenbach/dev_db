@@ -65,5 +65,20 @@
         "site": 1, 
         "user": 1
     }
+},
+{
+    "pk": 1, 
+    "model": "core.blogger", 
+    "fields": {
+        "name": "Rick VH",
+        "favourite_post": 1 
+    }
+},
+{
+    "pk": 1, 
+    "model": "core.post", 
+    "fields": {
+        "blogger": 1
+    }
 }
 ]

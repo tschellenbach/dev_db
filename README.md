@@ -55,3 +55,14 @@ These four steps are also wrapped in the load_dev_db command. So simply run
 Loading the fixture takes about 2 minutes
 
 (be sure to run pgtune on your local postgres, otherwise it might take longer)
+
+
+Running tests
+=============
+
+From the dev_db_example directory run
+
+```bash
+	python manage.py test dev_db
+```
+

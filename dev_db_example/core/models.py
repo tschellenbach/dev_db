@@ -29,6 +29,17 @@ class Item(models.Model):
     
     tags = models.ManyToManyField(Tag)
     
+# these two models are here to test if things break
+# when relations go two ways (infinite loops etcs)
+    
+class Blogger(models.Model):
+    name = models.CharField(max_length=255)
+    favourite_post = models.ForeignKey('Post', related_name='favourites')
+    
+class Post(models.Model):
+    blogger = models.ForeignKey(Blogger)
+    
+    
 
     
 
