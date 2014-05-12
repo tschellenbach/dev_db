@@ -4,7 +4,7 @@ from django.db.models.fields.related import ForeignKey, ManyToManyField
 from django.contrib.auth.models import SiteProfileNotAvailable
 
 
-def get_dependencies(instance, dependencies=None):
+def get_dependencies(instance, dependencies=None, instances=None):
     '''
     Recurses through the results and finds the dependencies
 
@@ -21,18 +21,29 @@ def get_dependencies(instance, dependencies=None):
     if dependencies is None:
         dependencies = []
 
+    if instances is None:
+        instances = {}
+    
     # see the dependencies for this instance
     deps = get_first_dependencies(instance)
-    # prevent infinite loops, usually between profile and user
-    deps = [d for d in deps if d not in dependencies]
+    instances.update(dict.fromkeys(deps))
+    # prevent infinite loops, usually between profile and user, blogger & post etc
+    deps = [d for d in deps if d not in instances]
     # for the first iteration (User, User, Entity, Love)
+    
+    # We need the seperate instances list, think of this base
+    # Blogger
+    # Post, Blogger
+    # Blogger, Post, Blogger
+    # Where we recurse on the left without ever reaching d==instance
+    
     for d in deps:
         # this is the case when its Love
         if d == instance:
             dependencies.append(d)
         # this happens for (Entity, User
         else:
-            get_dependencies(d, dependencies)
+            get_dependencies(d, dependencies, instances)
 
     return dependencies
 
