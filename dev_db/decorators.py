@@ -62,6 +62,7 @@ class CachedDecorator(object):
 
     return data
     """
+
     def __init__(self, fn, key, timeout):
         '''
         :param fn: the function passed to the decorator
