@@ -21,28 +21,28 @@ def get_dependencies(instance, dependencies=None, instances=None):
     if dependencies is None:
         dependencies = []
 
-    if instances is None:
-        instances = {}
-    
-    # see the dependencies for this instance
-    deps = get_first_dependencies(instance)
-    instances.update(dict.fromkeys(deps))
-    # prevent infinite loops, usually between profile and user, blogger & post etc
-    deps = [d for d in deps if d not in instances]
-    # for the first iteration (User, User, Entity, Love)
-    
     # We need the seperate instances list, think of this base
     # Blogger
     # Post, Blogger
     # Blogger, Post, Blogger
     # Where we recurse on the left without ever reaching d==instance
+    if instances is None:
+        instances = {}
+    
+    # see the dependencies for this instance
+    deps = get_first_dependencies(instance)
+    # for the first iteration (User, User, Entity, Love)
     
     for d in deps:
         # this is the case when its Love
         if d == instance:
             dependencies.append(d)
+        elif d in instances:
+            continue
         # this happens for (Entity, User
         else:
+            # prevent infinite loops, usually between profile and user, blogger & post etc
+            instances[d] = None
             get_dependencies(d, dependencies, instances)
 
     return dependencies

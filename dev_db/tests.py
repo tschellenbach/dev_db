@@ -21,12 +21,13 @@ class CreatorTestCase(TestCase):
         from django.contrib.auth.models import User, Permission, Group
         from django.contrib.sites.models import Site as DjangoSite
         from django.contrib.contenttypes.models import ContentType
-        from core.models import SiteCategory, Site, Tag, Item
+        from core.models import SiteCategory, Site, Tag, Item, Post
         expected_result = [
             (SiteCategory, 30),
             (Site, 30),
             (Tag, 30),
             (Item, 30),
+            (Post, 30),
             (Session, 30),
             (DjangoSite, 30),
             (Permission, 30),
@@ -52,7 +53,7 @@ class CreatorTestCase(TestCase):
         # check the recursive approach
         dependencies = get_dependencies(site)
         correct_deps = [site.category, site]
-        self.assertEqual(dependencies, correct_deps)
+        self.assertEqual(correct_deps, dependencies)
 
     def test_dependency_lookup_item(self):
         '''
