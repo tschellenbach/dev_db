@@ -14,6 +14,13 @@ class CreatorTestCase(TestCase):
 
     def test_model_listing(self):
         listed_models = self.creator.get_models()
+        
+    def test_recursion(self):
+        from core.models import Post
+        post = Post.objects.get(pk=1)
+        deps = get_dependencies(post)
+        correct_deps = [post, post.blogger, post]
+        self.assertEqual(correct_deps, deps)
 
     def test_model_settings(self):
         model_settings = self.creator.get_model_settings()
