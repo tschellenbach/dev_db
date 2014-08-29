@@ -10,7 +10,7 @@ Installation
 
 
 ```bash
-  sudo pip install dev_db
+  pip install dev_db
 ```
 
 Add dev_db to your installed apps
@@ -28,8 +28,8 @@ Creating the data
 =================
 
 ```bash
-  python manage.py create_dev_db -o ../development_data.json
-  gzip ../development_data.json
+  python manage.py create_dev_db -o development_data.json
+  gzip development_data.json
 ```
 
 Creating the test fixture takes about 5-10 minutes
