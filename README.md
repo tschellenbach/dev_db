@@ -43,7 +43,7 @@ test_fashiolista_local
 1. python manage.py syncdb --all --noinput
 2. python manage.py migrate --fake --noinput
 3. Truncate contenttype and permission tables
-4. python manage.py loaddata ../development_data.json.gz --traceback -v2
+4. python manage.py loaddata development_data.json.gz --traceback -v2
 
 These four steps are also wrapped in the load_dev_db command. So simply run
 (This assumes you don't have the database yet, it wont drop it for you)
