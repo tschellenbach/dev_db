@@ -1,7 +1,7 @@
 from dev_db.utils import get_all_fields
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.db.models.fields.related import ForeignKey, ManyToManyField
-from django.contrib.auth.models import SiteProfileNotAvailable
+
 
 
 def get_dependencies(instance, dependencies=None, instances=None):
@@ -84,7 +84,7 @@ def get_first_dependencies(instance):
     if isinstance(instance, UserModel):
         try:
             profile = instance.get_profile()
-        except SiteProfileNotAvailable, e:
+        except:
             profile = None
         if profile:
             dependencies.append(profile)

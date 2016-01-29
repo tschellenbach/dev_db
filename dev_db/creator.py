@@ -36,6 +36,7 @@ class DevDBCreator(object):
         excluded = self.get_excluded_models()
         all_models = self.get_all_models()
         valid_models = list(full_required)
+        
 
         for m, n in all_models:
             # skip the ones already in full required
@@ -51,6 +52,9 @@ class DevDBCreator(object):
                 valid = False
             if valid:
                 valid_models.append(m)
+                
+        logger.info('processing %s models', valid_models)
+                
         return valid_models
 
     def get_model_settings(self):

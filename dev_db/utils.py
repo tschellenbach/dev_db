@@ -41,7 +41,8 @@ def get_all_fields(instance):
     normal_fields = instance.__class__._meta.fields
     many_to_many_fields = instance.__class__._meta.many_to_many
     virtual_fields = instance.__class__._meta.virtual_fields
-    all_fields = normal_fields + many_to_many_fields + virtual_fields
+    
+    all_fields = list(normal_fields) + list(many_to_many_fields) + list(virtual_fields)
     return all_fields
 
 
